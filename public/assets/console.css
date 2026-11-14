@@ -1,0 +1,188 @@
+/* ============================================================
+   开发者控制台外壳 —— 对标微信开放平台 / QQ 开放平台
+   左侧多级导航 + 顶部全局搜索与账号区 + 右侧内容区
+   仅控制台页面引入；通用组件（card / stat / badge / table / btn）
+   复用 app.css，此处只做「增强」而不重复定义，避免样式漂移。
+   ============================================================ */
+:root{
+  --cs-side-w:232px;
+  --cs-top-h:56px;
+  --cs-bg:#f5f7fa;
+  --cs-nav-item-h:36px;
+  /* 间距栅格（4px 基准） */
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px;
+  --sp-5:20px; --sp-6:24px; --sp-8:32px; --sp-10:40px;
+  /* 字体层级 */
+  --fs-xs:12px; --fs-sm:13px; --fs-md:14px;
+  --fs-lg:16px; --fs-xl:20px; --fs-2xl:24px;
+}
+
+/* ---------- 外壳 ---------- */
+.cs-shell{min-height:100vh;display:flex;flex-direction:column;background:var(--cs-bg)}
+.cs-body{flex:1;display:grid;grid-template-columns:var(--cs-side-w) 1fr;align-items:start}
+
+/* ---------- 顶部栏 ---------- */
+.cs-top{height:var(--cs-top-h);background:#fff;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;padding:0 var(--sp-6);
+  position:sticky;top:0;z-index:60}
+.cs-top-brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;
+  color:var(--text);flex:none}
+.cs-top-brand:hover{text-decoration:none;color:var(--text)}
+.cs-top-brand .logo{width:26px;height:26px;font-size:14px}
+
+.cs-burger{display:none;align-items:center;justify-content:center;width:34px;height:34px;
+  border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--muted);cursor:pointer;flex:none}
+.cs-burger:hover{border-color:var(--primary);color:var(--primary)}
+
+/* 全局搜索 */
+.cs-search{position:relative;flex:1;max-width:440px}
+.cs-search-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  color:var(--faint);display:flex;pointer-events:none}
+.cs-search input{width:100%;height:34px;padding:0 12px 0 32px;
+  border:1px solid var(--border-s);border-radius:6px;background:#f7f9fc;
+  font-size:13px;outline:none;transition:.15s}
+.cs-search input:focus{background:#fff;border-color:var(--primary);box-shadow:var(--glow)}
+.cs-search-pop{position:absolute;left:0;right:0;top:40px;background:#fff;
+  border:1px solid var(--border);border-radius:8px;
+  box-shadow:0 10px 30px rgba(15,34,57,.14);max-height:330px;overflow:auto;display:none;z-index:70}
+.cs-search-pop.on{display:block}
+.cs-search-pop .cs-sp-g{font-size:11.5px;color:var(--faint);padding:7px 12px;
+  background:#fafbfd;border-bottom:1px solid #f1f5f9;font-weight:600}
+.cs-search-pop a{display:flex;align-items:center;gap:9px;padding:9px 12px;
+  font-size:13px;color:var(--text);border-bottom:1px solid #f6f8fb}
+.cs-search-pop a:last-child{border-bottom:none}
+.cs-search-pop a:hover{background:var(--info-bg);text-decoration:none;color:var(--primary)}
+.cs-search-pop .cs-sp-empty{padding:14px 12px;font-size:12.5px;color:var(--faint);text-align:center}
+
+.cs-top-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none}
+.cs-top-link{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--muted);
+  padding:6px 9px;border-radius:6px}
+.cs-top-link:hover{background:var(--bg-soft);color:var(--primary);text-decoration:none}
+
+/* 账号区 */
+.cs-account{position:relative}
+.cs-account-btn{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:6px;
+  cursor:pointer;border:1px solid transparent;background:none;max-width:200px}
+.cs-account-btn:hover{background:var(--bg-soft)}
+.cs-avatar{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--primary-d),var(--accent));
+  color:#fff;font-size:12px;font-weight:700}
+.cs-acct-txt{min-width:0;text-align:left}
+.cs-acct-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3;
+  max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cs-acct-role{font-size:11.5px;color:var(--faint);line-height:1.2}
+.cs-menu{position:absolute;right:0;top:44px;min-width:190px;background:#fff;
+  border:1px solid var(--border);border-radius:8px;padding:6px;
+  box-shadow:0 10px 30px rgba(15,34,57,.16);display:none;z-index:80}
+.cs-menu.on{display:block}
+.cs-menu a,.cs-menu button{display:flex;align-items:center;gap:8px;width:100%;
+  padding:8px 10px;font-size:13px;color:var(--text);background:none;border:none;
+  border-radius:6px;cursor:pointer;text-align:left;font-weight:400}
+.cs-menu a:hover,.cs-menu button:hover{background:var(--bg-soft);color:var(--primary);text-decoration:none}
+.cs-menu .cs-menu-sep{height:1px;background:var(--border);margin:6px 4px}
+
+/* ---------- 左侧多级导航 ---------- */
+.cs-side{background:#fff;border-right:1px solid var(--border);
+  position:sticky;top:var(--cs-top-h);height:calc(100vh - var(--cs-top-h));
+  overflow-y:auto;padding:12px 8px 28px}
+.cs-nav-group{margin-bottom:2px}
+.cs-nav-group-h{display:flex;align-items:center;gap:7px;padding:8px 10px;
+  font-size:11.5px;font-weight:700;color:var(--faint);letter-spacing:.04em;
+  cursor:pointer;user-select:none;border-radius:6px}
+.cs-nav-group-h:hover{background:var(--bg-soft);color:var(--primary)}
+.cs-nav-group-h .cs-caret{margin-left:auto;display:flex;transition:transform .18s}
+.cs-nav-group.collapsed .cs-caret{transform:rotate(-90deg)}
+.cs-nav-group.collapsed .cs-nav-sub{display:none}
+.cs-nav-item{position:relative;display:flex;align-items:center;gap:9px;
+  padding:0 10px 0 30px;height:var(--cs-nav-item-h);border-radius:6px;
+  color:var(--muted);font-size:13.5px;white-space:nowrap}
+.cs-nav-item:hover{background:var(--bg-soft);color:var(--primary);text-decoration:none}
+.cs-nav-item.on{background:var(--info-bg);color:var(--primary);font-weight:600}
+.cs-nav-item.on::before{content:"";position:absolute;left:0;top:8px;bottom:8px;
+  width:3px;border-radius:0 3px 3px 0;background:var(--primary)}
+.cs-nav-item .cs-nav-ico{width:16px;height:16px;flex:none;display:flex;opacity:.8}
+.cs-nav-item.on .cs-nav-ico{opacity:1}
+.cs-nav-item .cs-nav-tag{margin-left:auto;font-size:11px}
+.cs-nav-top>.cs-nav-item{padding-left:10px}
+
+/* ---------- 右侧内容区 ---------- */
+.cs-main{padding:var(--sp-6) var(--sp-6) var(--sp-10);min-width:0}
+.cs-crumb{display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  font-size:12.5px;color:var(--faint);margin-bottom:6px}
+.cs-crumb a{color:var(--faint)}
+.cs-crumb a:hover{color:var(--primary)}
+.cs-page{display:flex;align-items:flex-start;justify-content:space-between;
+  gap:16px;margin-bottom:var(--sp-5);flex-wrap:wrap}
+.cs-page-t{font-size:var(--fs-xl);font-weight:700;color:#0b2a52;line-height:1.35}
+.cs-page-s{font-size:13px;color:var(--muted);margin-top:4px}
+.cs-page-ops{display:flex;gap:8px;flex-wrap:wrap;flex:none}
+.cs-section{margin-bottom:var(--sp-5)}
+.cs-section-h{display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:var(--sp-3);flex-wrap:wrap}
+.cs-section-t{font-size:var(--fs-lg);font-weight:600;color:var(--text)}
+.cs-section-s{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+/* 栅格 */
+.cs-grid{display:grid;gap:var(--sp-4)}
+.cs-g2{grid-template-columns:repeat(2,1fr)}
+.cs-g3{grid-template-columns:repeat(3,1fr)}
+.cs-g4{grid-template-columns:repeat(4,1fr)}
+
+/* 数据概览卡片：增强既有 .stat（仅在带 .has-ico 时启用图标布局，
+   不带图标的旧用法保持完全不变，保证已有页面零回归） */
+.stat.has-ico{display:flex;align-items:center;gap:14px}
+.stat-ico{width:40px;height:40px;border-radius:10px;flex:none;display:grid;place-items:center;
+  background:linear-gradient(135deg,#eff6ff,#dbeafe);color:var(--primary)}
+.stat.has-ico .stat-b{min-width:0}
+.stat.ok  .stat-ico{background:linear-gradient(135deg,#e6f9f2,#c9f0e2);color:var(--ok)}
+.stat.warn .stat-ico{background:linear-gradient(135deg,#fdf4e3,#fae7bf);color:var(--warn)}
+.stat.err .stat-ico{background:linear-gradient(135deg,#fdecec,#f9d4d4);color:var(--err)}
+.stat-sub{font-size:11.5px;color:var(--faint);margin-top:2px}
+
+/* 卡片工具栏 / 空状态 */
+.card-tools{display:flex;gap:8px;flex-wrap:wrap}
+.cs-empty{padding:36px 12px;text-align:center;color:var(--faint);font-size:13.5px}
+
+/* 移动端遮罩 */
+.cs-mask{display:none}
+
+/* ---------- 响应式 ---------- */
+@media (max-width:1024px){
+  .cs-body{grid-template-columns:1fr}
+  .cs-side{position:fixed;left:0;top:var(--cs-top-h);bottom:0;width:var(--cs-side-w);
+    z-index:55;transform:translateX(-100%);transition:transform .22s ease;
+    box-shadow:6px 0 24px rgba(15,34,57,.14);height:auto}
+  .cs-side.open{transform:translateX(0)}
+  .cs-mask.on{display:block;position:fixed;left:0;right:0;top:var(--cs-top-h);bottom:0;
+    background:rgba(15,34,57,.35);z-index:54}
+  .cs-burger{display:flex}
+  .cs-main{padding:16px 14px 32px}
+}
+@media (max-width:640px){
+  .cs-top{padding:0 12px;gap:8px}
+  .cs-search{max-width:none}
+  .cs-acct-txt{display:none}
+  .cs-top-link{display:none}
+  .cs-page{padding-top:2px}
+  .cs-page-t{font-size:18px}
+  .cs-g4,.cs-g3,.cs-g2{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:420px){
+  .cs-g4,.cs-g3,.cs-g2{grid-template-columns:1fr}
+}
+
+/* ---------- 深色模式 ---------- */
+@media (prefers-color-scheme: dark){
+  .cs-shell{background:var(--bg)}
+  .cs-top{background:var(--panel);border-bottom-color:var(--border)}
+  .cs-search input{background:#0f172a;border-color:var(--border-s);color:var(--text)}
+  .cs-search input:focus{background:#0f172a}
+  .cs-search-pop{background:var(--panel);border-color:var(--border)}
+  .cs-search-pop .cs-sp-g{background:#0f172a;border-bottom-color:var(--border)}
+  .cs-search-pop a{border-bottom-color:var(--border)}
+  .cs-side{background:var(--panel);border-right-color:var(--border)}
+  .cs-menu{background:var(--panel);border-color:var(--border)}
+  .cs-burger{background:var(--panel);border-color:var(--border);color:var(--muted)}
+  .stat.has-ico .stat-v{color:var(--text)}
+  .cs-page-t{color:var(--text)}
+}

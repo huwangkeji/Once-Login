@@ -1,0 +1,37 @@
+{
+  "packages": {
+    "UIC_OpenAPI_v1.1.0.zip": {
+      "title": "UIC 开放平台完整源码包",
+      "version": "v1.1.0",
+      "desc": "app/public/config/sdk 完整可部署源码 + 文档集 + 可运行示例",
+      "size": 1850027,
+      "mtime": 1791999029,
+      "builtin": true
+    },
+    "UIC_SDK_v1.1.0.zip": {
+      "title": "UIC SDK 全语言开发包",
+      "version": "v1.1.0",
+      "desc": "PHP/Python/JS/Go/Java/C 客户端 SDK + 示例",
+      "size": 379820,
+      "mtime": 1791999029,
+      "builtin": true
+    },
+    "UIC_SDK_v1.0.0.zip": {
+      "title": "UIC SDK（旧版本号包）",
+      "version": "v1.0.0",
+      "desc": "内容与 v1.1.0 一致，建议优先使用 v1.1.0",
+      "size": 379885,
+      "mtime": 1791999029,
+      "builtin": true
+    },
+    "应用管理模块SDK源码.zip": {
+      "title": "应用管理模块 SDK 源码",
+      "version": "v1.1.0",
+      "desc": "应用管理 / SSO 接入 SDK（多语言）+ 示例",
+      "size": 381463,
+      "mtime": 1791999029,
+      "builtin": true
+    }
+  },
+  "updated_at": 1791999029
+}

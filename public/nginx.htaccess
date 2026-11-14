@@ -1,0 +1,36 @@
+# =========================================================================
+#  Web 根目录（public/）Nginx 规则
+#  完整站点配置见项目根目录 nginx.htaccess，此处仅放 docroot 内生效的规则。
+# =========================================================================
+
+# ---------- 1. docroot 内只允许执行指定 PHP 入口 ----------
+# 本项目路由为查询串形式（index.php?c=xxx），无需 rewrite。
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+
+# ---------- 2. 安装程序：初始化完成后封禁 ----------
+# 装完请直接删除 public/install.php；若保留，取消下面注释仅允许内网访问。
+# location = /install.php {
+#     allow 127.0.0.1;
+#     allow 10.0.0.0/8;
+#     deny  all;
+# }
+
+# ---------- 3. 禁止泄露目录内的备份/数据文件 ----------
+location ~* \.(sql|bak|db|sqlite|log|zip|docx|md)$ {
+    deny all;
+    return 404;
+}
+location ~ /\. {
+    deny all;
+    return 404;                     # .git / .env / .htaccess
+}
+
+# ---------- 4. 健康检查（供负载均衡/监控探测，禁缓存）----------
+location = /health.php {
+    add_header Cache-Control "no-store" always;
+    include fastcgi_params;
+    fastcgi_pass   127.0.0.1:9001;
+    fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}

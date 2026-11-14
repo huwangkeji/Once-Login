@@ -1,0 +1,43 @@
+- generic [ref=f8e1]:
+  - generic [ref=f8e3]:
+    - heading "统一身份认证中心" [level=1] [ref=f8e7]
+    - generic [ref=f8e8]:
+      - textbox "手机号 / 用户名 / 邮箱" [active] [ref=f8e10]
+      - textbox "密码" [ref=f8e12]
+      - generic [ref=f8e14]:
+        - generic [ref=f8e16]:
+          - generic [ref=f8e17]:
+            - img "验证码" [ref=f8e18] [cursor=pointer]
+            - generic [ref=f8e19]: 加载中...
+          - textbox "请输入图中 4 位字符" [ref=f8e24]
+        - button "换一张" [ref=f8e26] [cursor=pointer]
+      - generic [ref=f8e32] [cursor=pointer]:
+        - checkbox "已阅读并同意《服务条款》和《隐私政策》" [ref=f8e33]
+        - generic [ref=f8e34]:
+          - text: 已阅读并同意
+          - link "《服务条款》" [ref=f8e35]:
+            - /url: http://127.0.0.1:8899/index.php?c=page&a=terms
+          - text: 和
+          - link "《隐私政策》" [ref=f8e36]:
+            - /url: http://127.0.0.1:8899/index.php?c=page&a=privacy
+      - generic [ref=f8e37]:
+        - generic [ref=f8e38] [cursor=pointer]:
+          - checkbox "记住登录状态" [checked] [ref=f8e39]
+          - text: 记住登录状态
+        - generic [ref=f8e40] [cursor=pointer]:
+          - checkbox "挤下线其他设备" [ref=f8e41]
+          - text: 挤下线其他设备
+      - button "登 录" [disabled] [ref=f8e42]
+    - generic [ref=f8e43]:
+      - text: 登录/
+      - link "注册" [ref=f8e44] [cursor=pointer]:
+        - /url: http://127.0.0.1:8899/index.php?c=user&a=register
+  - contentinfo [ref=f8e45]:
+    - generic [ref=f8e46]: © 2026 沧州氢境科技有限公司
+    - navigation [ref=f8e47]:
+      - link "服务条款" [ref=f8e48] [cursor=pointer]:
+        - /url: http://127.0.0.1:8899/index.php?c=page&a=terms
+      - link "|隐私政策" [ref=f8e49] [cursor=pointer]:
+        - /url: http://127.0.0.1:8899/index.php?c=page&a=privacy
+      - link "|帮助和反馈" [ref=f8e50] [cursor=pointer]:
+        - /url: http://127.0.0.1:8899/index.php?c=page&a=help

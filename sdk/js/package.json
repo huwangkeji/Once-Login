@@ -1,0 +1,23 @@
+{
+  "name": "uic-sdk",
+  "version": "1.0.0",
+  "description": "统一身份认证中心(UCenter) JavaScript SDK，支持浏览器与 Node.js 环境",
+  "main": "index.js",
+  "browser": "dist/uic-sdk.js",
+  "scripts": {
+    "test": "node test/smoke.test.js"
+  },
+  "keywords": [
+    "uic",
+    "sso",
+    "sdk",
+    "ucenter",
+    "auth"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "UIC Team",
+  "license": "MIT",
+  "dependencies": {}
+}

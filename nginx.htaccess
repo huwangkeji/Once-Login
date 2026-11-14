@@ -1,0 +1,76 @@
+# =========================================================================
+#  Nginx 部署参考配置 · 统一身份认证中心（UIC）
+#  用法：把本文件内容并入站点 server{} 块（phpStudy 可直接放进 vhost 的
+#        "自定义配置" 区域）。本项目全部路由均为查询串形式
+#        （index.php?c=xxx / admin.php?c=xxx），因此**不需要 URL 重写**。
+# =========================================================================
+
+# ---------- 1. 站点根目录必须指向 public/ ----------
+# 只有 public/ 允许对外暴露；app/ config/ data/ sdk/ docs/ tools/ 一律在根目录之外。
+# root  D:/www/uic/public;
+# index index.php index.html;
+
+# ---------- 2. 默认入口 ----------
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+
+# ---------- 3. PHP-FPM ----------
+location ~ \.php$ {
+    fastcgi_pass   127.0.0.1:9001;          # 按实际 PHP-FPM 端口调整（phpStudy 常见 9001）
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include        fastcgi_params;
+
+    # 反向代理场景：把真实协议传给后端，否则会话 Cookie 的 Secure 标记无法正确下发
+    fastcgi_param  HTTP_X_FORWARDED_PROTO $scheme;
+}
+
+# ---------- 4. 敏感目录/文件一律拒绝（纵深防御）----------
+# 即便 docroot 配错，也不至于泄露源码、配置与备份
+location ~* ^/(app|config|data|sdk|docs|tools)/ {
+    deny all;
+    return 404;
+}
+location ~* \.(sql|bak|db|sqlite|log|zip|docx|md)$ {
+    deny all;
+    return 404;
+}
+location ~ /\. {
+    deny all;
+    return 404;                              # 拒绝 .git / .env / .htaccess 等
+}
+
+# ---------- 5. 安装程序：装完即封 ----------
+# 首次部署执行 /install.php 完成初始化后，建议直接删掉 public/install.php；
+# 若需保留，启用下面这段，用内网 IP 白名单限制访问。
+# location = /install.php {
+#     allow  10.0.0.0/8;
+#     allow  127.0.0.1;
+#     deny   all;
+#     include fastcgi_params;
+#     fastcgi_pass   127.0.0.1:9001;
+#     fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+# }
+
+# ---------- 6. 健康检查：允许探测、禁止缓存 ----------
+location = /health.php {
+    add_header Cache-Control "no-store" always;
+    include fastcgi_params;
+    fastcgi_pass   127.0.0.1:9001;
+    fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}
+
+# ---------- 7. 静态资源缓存 ----------
+location ~* \.(css|js|png|jpg|jpeg|gif|webp|svg|woff2?)$ {
+    expires 7d;
+    add_header Cache-Control "public, max-age=604800";
+}
+
+# =========================================================================
+#  上线前必做检查
+#   1) root 指向 public/，且 /health.php 返回 200（返回 503 时看 warnings 字段）
+#   2) uc_driver 必须是 http（mock 会被 /health.php 判定为 degraded）
+#   3) 全站 HTTPS（会话 Cookie 依赖 Secure；反代需传 X-Forwarded-Proto）
+#   4) 确认 /app/ /config/ /data/ 均返回 404
+# =========================================================================

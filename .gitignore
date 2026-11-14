@@ -1,0 +1,53 @@
+# =========================================================
+#  统一身份认证中心（UIC）· 版本库忽略规则
+#  目的：杜绝数据库口令、本地凭据、备份包、构建产物误入库
+# =========================================================
+
+# ---- 敏感配置（最高优先级，绝不允许入库）----
+# 数据库口令等凭据外置文件（config/config.php 会读取它）
+data/db_cred.php
+# 站点配置文件含部署相关信息，按环境各自维护
+config/config.php
+# 安装锁（记录安装时间，属运行时状态）
+data/install.lock
+
+# ---- 数据 / 运行时产物 ----
+data/*.db
+data/*.sqlite
+data/*.bak
+data/*.bak_*
+data/*.log
+data/*.sql
+data/*.sql.gz
+data/*.zip
+
+# ---- 备份与安装基线 ----
+# 注意：数据库导出文件含 uc_key 通信密钥等敏感值，绝不可入库
+data/backups/
+data/*baseline*
+
+# ---- 交付包 / 文档产物（可由脚本重建）----
+/*.zip
+/*.docx
+/*.rar
+
+# ---- 依赖与构建产物 ----
+node_modules/
+/vendor/
+composer.lock
+.env
+.env.*
+!.env.example
+
+# ---- 测试与调试产物 ----
+tools/_shots/
+tools/_out/
+*.log
+.phpunit.result.cache
+
+# ---- 编辑器 / 系统 ----
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

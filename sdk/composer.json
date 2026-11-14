@@ -1,0 +1,40 @@
+{
+  "name": "uic/sdk",
+  "description": "统一身份认证中心 (UIC) 官方 PHP SDK - 支持 OAuth2.0、SSO 单点登录、用户管理",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "UIC Team",
+      "email": "dev@uic.local"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*",
+    "ext-curl": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.0"
+  },
+  "config": {
+    "audit": {
+      "ignore": [
+        "PKSA-z3gr-8qht-p93v"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
+  },
+  "autoload": {
+    "psr-4": {
+      "UIC\\SDK\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "UIC\\SDK\\Tests\\": "tests/"
+    }
+  }
+}

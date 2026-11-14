@@ -1,0 +1,56 @@
+{
+  "project": "统一身份认证中心 SDK 接口契约",
+  "version": "1.0.0",
+  "base_url": "http://127.0.0.5",
+  "api_entry": "{base}/api/index.php",
+  "response_format": {
+    "code": "int, 业务码：0=成功，非 0 为业务错误码（401/403/404/406/500/501 等，见 error_codes）",
+    "message": "string, 人类可读描述",
+    "data": "any|null, 业务数据",
+    "time": "int, 服务端时间戳"
+  },
+  "auth_modes": {
+    "admin_session": "Cookie: PHPSESSID, 适用于管理侧接口",
+    "app_secret": "AppID + AppSecret, 适用于应用侧 SSO 接口"
+  },
+  "error_codes": {
+    "0": "成功",
+    "1": "业务错误（参数校验失败等）",
+    "401": "未登录 / 会话过期",
+    "403": "权限不足",
+    "404": "资源不存在 / 接口不存在",
+    "406": "验证码校验失败",
+    "500": "服务端内部错误",
+    "501": "接口未实现"
+  },
+  "endpoints": {
+    "admin_app_list":   {"m":"admin","a":"app_list","auth":"admin_session","method":"GET","params":{},"perm":"view:apps"},
+    "admin_app_save":   {"m":"admin","a":"app_save","auth":"admin_session","method":"POST","params":{"id":"int(0新建)","name":"string","description":"string","home_url":"string","callbacks":"array|string","status":"int(0/1)","sso_enabled":"int(0/1)","app_id":"string(新建时可选)"},"perm":"manage:apps"},
+    "admin_app_reset_secret":{"m":"admin","a":"app_reset_secret","auth":"admin_session","method":"POST","params":{"id":"int"},"perm":"manage:apps"},
+    "admin_app_toggle": {"m":"admin","a":"app_toggle","auth":"admin_session","method":"POST","params":{"id":"int","status":"int(0/1)"},"perm":"manage:apps"},
+    "admin_app_delete": {"m":"admin","a":"app_delete","auth":"admin_session","method":"POST","params":{"id":"int"},"perm":"manage:apps"},
+    "admin_app_test":   {"m":"admin","a":"app_test","auth":"admin_session","method":"POST","params":{"id":"int"},"perm":"view:apps"},
+    "sso_authorize":    {"m":"sso","a":"authorize","auth":"none","method":"GET","params":{"app_id":"string","redirect":"string"}},
+    "sso_exchange":     {"m":"sso","a":"exchange","auth":"app_secret","method":"POST","params":{"ticket":"string","app_id":"string","app_secret":"string"}},
+    "sso_userinfo":     {"m":"sso","a":"userinfo","auth":"app_secret","method":"GET","params":{"token":"string","app_id":"string"}},
+    "sso_logout":       {"m":"sso","a":"logout","auth":"app_secret","method":"POST","params":{"token":"string","app_id":"string"}},
+    "sso_test":         {"m":"sso","a":"test","auth":"app_secret","method":"POST","params":{"app_id":"string","app_secret":"string"}}
+  },
+  "sdk_methods": [
+    {"name":"init","desc":"初始化 SDK（配置 BaseURL、超时、日志）","params":["baseURL","timeout","logger"]},
+    {"name":"setAdminSession","desc":"设置管理侧 Cookie 会话（PHPSESSID）","params":["sessionId"]},
+    {"name":"setAppCredentials","desc":"设置应用侧凭据（AppID + AppSecret）","params":["appId","appSecret"]},
+    {"name":"appList","desc":"获取应用列表","params":[],"returns":"App[]"},
+    {"name":"appCreate","desc":"创建新应用","params":["name","description","homeUrl","callbacks","ssoEnabled"],"returns":"{id,app_id,app_secret}"},
+    {"name":"appUpdate","desc":"更新应用配置","params":["id","name","description","homeUrl","callbacks","status","ssoEnabled"],"returns":"{id}"},
+    {"name":"appResetSecret","desc":"重置应用密钥","params":["id"],"returns":"{app_secret}"},
+    {"name":"appToggle","desc":"启用/禁用应用","params":["id","status"],"returns":"null"},
+    {"name":"appDelete","desc":"删除应用","params":["id"],"returns":"null"},
+    {"name":"appTest","desc":"通信测试","params":["id"],"returns":"{ok,message}"},
+    {"name":"authorizeUrl","desc":"构建 SSO 授权跳转 URL","params":["appId","redirectUri"],"returns":"string"},
+    {"name":"exchange","desc":"ticket 换 token","params":["ticket","appId","appSecret"],"returns":"{token,expires_in}"},
+    {"name":"userinfo","desc":"token 换用户信息","params":["token","appId"],"returns":"UserProfile"},
+    {"name":"logout","desc":"单点退出","params":["token","appId"],"returns":"null"},
+    {"name":"testConnect","desc":"连通性测试","params":["appId","appSecret"],"returns":"{ok,message}"}
+  ]
+}
